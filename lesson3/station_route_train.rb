@@ -1,5 +1,5 @@
 class Station
-    attr_accessor :trains
+    attr_reader :trains
     
     def initialize(name)
         @name = name
@@ -17,16 +17,13 @@ class Station
     end
     
     def get_train_by_type(type)
-        trains_by_type[type]
+        @trains_by_type[type]
     end
 
     def send_train(train)
         trains.delete(train)
     end 
-    
-    def trains_by_type(type)              
-        trains.select { |train| train.type == type}.size                           
-    end    
+       
 end
 
 class Route
@@ -45,15 +42,14 @@ class Route
     end
 
     def show_station_list
-        puts station_list # или можно так?
-        station_list.each {|station| puts station}
+        puts @station_list
     end    
 
 end     
 
 class Train
-    attr_accessor :speed, :train_length
-    attr_reader :route
+    attr_accessor :train_length
+    attr_reader :speed, :route
 
     def initialize(number, type, train_length)
         
@@ -71,11 +67,11 @@ class Train
     end
     
     def add_wagons
-        train_length +=1 if speed == 0
+        train_length += 1 if speed == 0
     end
 
     def delete_wagons
-        train_length -=1 if speed == 0
+        train_length -= 1 if speed == 0
     end
 
     def add_route(route)
