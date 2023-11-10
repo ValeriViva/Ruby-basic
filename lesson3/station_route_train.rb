@@ -4,45 +4,42 @@ class Station
     def initialize(name)
         @name = name
         @trains = []
-        @trains_by_type = {}
     end
 
     def take_train(train)
         @trains << train
-         if trains_by_type[train.type] 
-            trains_by_type[train.type] += 1
-         else 
-            trains_by_type[train.type] = 1
-         end
     end
     
     def get_train_by_type(type)
-        @trains_by_type[type]
-    end
-
+        @trains.select{|train| train.type == type}.size 
+    end # правильно ли я понимаю данный пункт тз? "Может возвращать список поездов на станции по типу (см. ниже): КОЛ-ВО грузовых, пассажирских" 
+        # то есть нужно указывать сколько (цифру) поезов того или иного типа сейчас на станции? или достаточно просто списка? 
+        # собственно, чтобы указать кол-во поездов по типу, здесь исползую метод size, а в предыдущем варианте пыталась реализовать через хэш
+        # поясните, пожалуйста!
+        
     def send_train(train)
-        trains.delete(train)
+        @trains.delete(train)
     end 
        
 end
 
 class Route
-    attr_reader :station_list
+    attr_reader :stations
     
     def initialize(first_station, last_station)
-        @station_list = [first_station, last_station]
+        @stations = [first_station, last_station]
     end
 
     def add_station(station)
-        station_list.incert(-2, station)
+        stations.insert(-2, station)
     end   
     
     def delete_station(station)
-        station_list.delete(station) if station != station_list.first && station != station_list.last
+        stations.delete(station) if station != stations.first && station != stations.last
     end
 
-    def show_station_list
-        puts @station_list
+    def show_stations
+        puts @stations
     end    
 
 end     
@@ -81,35 +78,30 @@ class Train
     end
 
     def current_station
-        @route.station_list[@current_station_index]
+        @route.stations[@current_station_index]
     end
 
     def next_station
-        @route.station_list[@current_station_index + 1] if @current_station_index +1 < @route.station_list.size 
-
+        @route.stations[@current_station_index + 1] if @current_station_index +1 < @route.stations.size 
     end
 
-    def prev_station
-        @route.station_list[@current_station_index - 1] if @current_station_index > 0
+    def previous_station
+        @route.stations[@current_station_index - 1] if @current_station_index > 0
     end
 
     def move_to_next_station
       if next_station
-        current_station.send_train(self)
-        next_station.take_train(self)
-        @current_station_index += 1
+          current_station.send_train(self)
+          next_station.take_train(self)
+          @current_station_index += 1 
       end
-
     end
 
-    def move_to_prev_station
-        if prev_station
+    def move_to_previous_station
+        if previous_station
           current_station.send_train(self)
-          prev_station.take_train(self)
+          previous_station.take_train(self)
           @current_station_index -= 1
         end  
-
     end
 end 
-
-
