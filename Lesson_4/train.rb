@@ -17,11 +17,11 @@ class Train
       @speed = 0
   end
   
-  def add_wagons
+  def add_carriage
       train_length += 1 if speed == 0
   end
 
-  def delete_wagons
+  def delete_carriage
       train_length -= 1 if speed == 0
   end
 
