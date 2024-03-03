@@ -1,2 +1,3 @@
 class CargoTrain < Train
+end
   
