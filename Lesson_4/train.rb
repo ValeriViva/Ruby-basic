@@ -8,20 +8,12 @@ class Train
       @type = type
       @train_length = train_length
   end
-
-  def speed_increase
-      @speed += 1
-  end    
   
-  def stop
-      @speed = 0
-  end
-  
-  def add_carriage
+  def add_carriage(carriage)
       train_length += 1 if speed == 0
   end
 
-  def delete_carriage
+  def delete_carriage(carriage)
       train_length -= 1 if speed == 0
   end
 
@@ -57,5 +49,15 @@ class Train
         previous_station.take_train(self)
         @current_station_index -= 1
       end  
+  end
+
+  protected #в интерфейсе не предусмотренно, что пользователь может разгонять или останавливать поезд
+
+  def speed_increase
+      @speed += 1
+  end    
+  
+  def stop
+      @speed = 0
   end
 end 
