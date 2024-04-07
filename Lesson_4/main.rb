@@ -17,6 +17,11 @@ class Railway
   end
 
   def menu 
+
+    #не заыбть удалить
+    @trains << Train.new("323", :cargo)
+    @trains << Train.new("222", :cargo)
+    @trains << Train.new("111", :passenger)
     loop do
       puts "Создать поезд, маршрут или станцию- введите 1
             Произвести действия с объектом - введите 2
@@ -38,12 +43,14 @@ class Railway
     end
   end
 
+  protected
+
   def create
     loop do
       puts "Создать поезд - введите 1
             Создать станцию - введите 2
             Создать маршрут - введите 3
-            Выйти из программы - введите 0"
+            Выйти в основное меню программы - введите 0"
             choice = gets.chomp.to_i
       case choice
       when 1
@@ -65,19 +72,16 @@ class Railway
     number = gets.chomp
     puts "Введите тип поезда: passenger или cargo"
     type = gets.chomp
-    puts "Введите количество вагонов"
-    train_length = gets.chomp
     puts "Создаём поезд"
     train = if type == "passenger"
-      PassengerTrain.new(number, type, train_length)
+      PassengerTrain.new(number, type)
     elsif type == "cargo"
-      CargoTrain.new(number, type, train_length)
+      CargoTrain.new(number, type)
     else
       puts "Введите корректный тип поезда"
     end     
     puts "Создали поезд"
     @trains << train
-    @train_carriages = []
     puts train.number
     puts train.type
     
@@ -126,7 +130,7 @@ class Railway
       Отцепить вагон от поезда - 5
       Переместить поезд по маршруту вперед - 6
       переместить поезд по маршруту назад -7
-      Выйти из программы - 0"
+      Выйти в основное меню программы - 0"
       input = gets.chomp.to_i
       case input
       when 1
@@ -187,20 +191,31 @@ class Railway
     puts "Введите порядковый номер поезда"
     display_trains
     train = @trains[gets.chomp.to_i]
-    create_carrige
-    @train_carriages << carriage
-    train.add_carriage(carriage)
-    puts train_length
+    train.stop
+    train.add_carriage
+    puts train.carriages.size
   end
   
   def delete_carriage
+    puts "Введите порядковый номер поезда"
+    display_trains
+    train = @trains[gets.chomp.to_i]
+    train.stop
+    if train.carriages.size > 0
+      train.delete_carriage
+    end 
+    puts train.carriages.size 
   end
   
   def move_to_next_station
     puts "Введите порядковый номер поезда"
     display_trains
     train = @trains[gets.chomp.to_i]
+    if train.route
     train.move_to_next_station
+    else
+      puts "Маршрут данному поезду пока не присвоен"
+    end  
   end
   
   def move_to_previous_station
@@ -227,7 +242,7 @@ class Railway
     loop do
       puts"Вывести список станций - введите 1
            Вывести список поездов на определённой станции - введите 2
-           Выйти из программы - введите 0"
+           Выйти в основное меню программы - введите 0"
            input = gets.chomp.to_i
       case input
       when 1
@@ -266,13 +281,7 @@ class Railway
     end  
   end
 
-  def create_carrige
-    if train.type == :passenger
-      carriage = PassengerCarriage.new
-    elsif train.type == :cargo
-      carriage = CagroCarriage.new
-    end
-  end
+  
 
 end
 

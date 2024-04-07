@@ -1,38 +1,31 @@
 class Train
-  attr_accessor :train_length
-  attr_reader :speed, :route, :number, :type
+  attr_accessor :speed
+  attr_reader  :route, :number, :type, :carriages
 
-  def initialize(number, type, train_length)
+  def initialize(number, type)
       
       @number = number
       @type = type
-      @train_length = train_length
+      @carriages = []
   end
   
-  def add_carriage(carriage)
-      train_length += 1 if speed == 0
+  def add_carriage
+    if speed == 0
+    carriage = create_carriage
+    @carriages << carriage 
+    end
   end
 
-  def delete_carriage(carriage)
-      train_length -= 1 if speed == 0
+  def delete_carriage
+    if speed == 0
+        @carriages.delete_at(-1)
+    end    
   end
 
   def add_route(route)
       @route = route
       @current_station_index = 0
       current_station.take_train(self)
-  end
-
-  def current_station
-      @route.stations[@current_station_index]
-  end
-
-  def next_station
-      @route.stations[@current_station_index + 1] if @current_station_index +1 < @route.stations.size 
-  end
-
-  def previous_station
-      @route.stations[@current_station_index - 1] if @current_station_index > 0
   end
 
   def move_to_next_station
@@ -51,13 +44,34 @@ class Train
       end  
   end
 
-  protected #в интерфейсе не предусмотренно, что пользователь может разгонять или останавливать поезд
+  def stop
+    @speed = 0
+  end
+
+  protected
+
+  def current_station
+      @route.stations[@current_station_index]
+  end
+
+  def next_station
+      @route.stations[@current_station_index + 1] if @current_station_index +1 < @route.stations.size 
+  end
+
+  def previous_station
+      @route.stations[@current_station_index - 1] if @current_station_index > 0
+  end
 
   def speed_increase
       @speed += 1
-  end    
-  
-  def stop
-      @speed = 0
   end
+  
+  def create_carriage
+    if @type == :passenger
+      PassengerCarriage.new
+    elsif @type == :cargo
+      CargoCarriage.new
+    end
+  end
+  
 end 
