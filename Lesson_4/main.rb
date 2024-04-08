@@ -8,7 +8,6 @@ require_relative 'cargo_carriage'
 require_relative 'passenger_carriage'
 
 
-
 class Railway
   def initialize
     @trains = []
@@ -17,11 +16,6 @@ class Railway
   end
 
   def menu 
-
-    #не заыбть удалить
-    @trains << Train.new("323", :cargo)
-    @trains << Train.new("222", :cargo)
-    @trains << Train.new("111", :passenger)
     loop do
       puts "Создать поезд, маршрут или станцию- введите 1
             Произвести действия с объектом - введите 2
@@ -43,7 +37,7 @@ class Railway
     end
   end
 
-  protected
+  protected #чтобы нельзя было получить доступ к следующим методам извне данного класса 
 
   def create
     loop do
@@ -72,30 +66,21 @@ class Railway
     number = gets.chomp
     puts "Введите тип поезда: passenger или cargo"
     type = gets.chomp
-    puts "Создаём поезд"
     train = if type == "passenger"
       PassengerTrain.new(number, type)
     elsif type == "cargo"
       CargoTrain.new(number, type)
-    else
-      puts "Введите корректный тип поезда"
     end     
-    puts "Создали поезд"
     @trains << train
     puts train.number
-    puts train.type
-    
+    puts train.type  
   end
-
   def create_station
     puts "Введите название станции" 
     name = gets.chomp
-    puts "Создаём станцию"
     station = Station.new(name)
-    puts "Создали станцию"
     @stations << station
     puts station.name
-    # puts station.trains.size
   end
   
   def create_route
@@ -110,9 +95,7 @@ class Railway
       puts "#{index}-станция #{station.name}"
       end
         index2 = gets.chomp.to_i  
-      puts "Создаём маршрут"
       route = Route.new(@stations[index1], @stations[index2])
-      puts "Создали маршрут"
       @routes << route
       puts route
       puts "маршрут: #{route.stations.first.name} - #{route.stations.last.name}"
@@ -171,20 +154,25 @@ class Railway
     display_route
     route = @routes[gets.chomp.to_i]
     puts "Введите номер станции"
-    display_stations
+    route.show_stations
     station = @stations[gets.chomp.to_i]
     route.delete_station(station)
     puts route.stations.size
   end
 
   def add_route
-    puts "Введите номер маршрута"
-    display_route
-    route = @routes[gets.chomp.to_i]
-    puts "Введите порядковый номер поезда"
-    display_trains
-    train = @trains[gets.chomp.to_i]
-    train.add_route(route)
+    if @routes.size >= 1
+      puts "Введите номер маршрута"
+      display_route
+      route = @routes[gets.chomp.to_i]
+      puts "Введите порядковый номер поезда"
+      display_trains
+      train = @trains[gets.chomp.to_i]
+      train.add_route(route)
+      puts "Поезд №#{train.number} находится на станции #{train.route.stations.first.name}"
+    else
+      puts "Сначала создайте маршрут"
+    end   
   end
 
   def add_carriage
@@ -214,7 +202,7 @@ class Railway
     if train.route
     train.move_to_next_station
     else
-      puts "Маршрут данному поезду пока не присвоен"
+      puts "Чтобы переместить поезд по маршруту, сначала назначьте маршрут данному поезду"
     end  
   end
   
@@ -222,7 +210,11 @@ class Railway
     puts "Введите порядковый номер поезда"
     display_trains
     train = @trains[gets.chomp.to_i]
+    if train.route
     train.move_to_previous_station
+    else
+    puts "Чтобы переместить поезд по маршруту, сначала назначьте маршрут данному поезду"
+    end  
   end
 
   def display_trains
@@ -233,10 +225,9 @@ class Railway
 
   def display_route
     @routes.each_with_index do |route, index|
-      puts "#{index} - маршрут:#{route.stations[0].name} - #{route.stations[-1].name}"
+    puts "#{index} - маршрут:#{route.stations[0].name} - #{route.stations[-1].name}"
     end
   end  
-
 
   def display
     loop do
@@ -279,10 +270,7 @@ class Railway
     else
       puts "На данной станции нет поездов"  
     end  
-  end
-
-  
-
+  end  
 end
 
 

@@ -48,7 +48,7 @@ class Train
     @speed = 0
   end
 
-  protected
+  protected #следующие методы не используются извне данного класса, но могут использоваться в наследуемых классах
 
   def current_station
       @route.stations[@current_station_index]

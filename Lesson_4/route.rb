@@ -6,15 +6,25 @@ class Route
   end
 
   def add_station(station)
-      stations.insert(-2, station)
+    if station != stations.first && station != stations.last
+        stations.insert(-2, station)
+    else
+        puts "Данная станция является начальной/конечной станцией маршрута. Выберете другую станцию"
+    end         
   end   
   
   def delete_station(station)
-      stations.delete(station) if station != stations.first && station != stations.last
+    if station != stations.first && station != stations.last
+      stations.delete(station)
+    else
+      puts "Данная станция является начальной/конечной станцией маршрута. Выберете другую станцию"
+    end 
   end
 
   def show_stations
-      puts @stations
+    @stations.each_with_index do |station, index|
+        puts "#{index}-станция #{station.name}"
+    end
   end    
 
 end     
