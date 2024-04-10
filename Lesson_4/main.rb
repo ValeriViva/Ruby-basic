@@ -75,6 +75,7 @@ class Railway
     puts train.number
     puts train.type  
   end
+
   def create_station
     puts "Введите название станции" 
     name = gets.chomp
@@ -89,12 +90,12 @@ class Railway
       @stations.each_with_index do |station, index|
         puts "#{index}-станция #{station.name}"
       end
-       index1 = gets.chomp.to_i
+      index1 = gets.chomp.to_i
       puts "Выбери последнюю станцию маршрута"
       @stations.each_with_index do |station, index|
-      puts "#{index}-станция #{station.name}"
+        puts "#{index}-станция #{station.name}"
       end
-        index2 = gets.chomp.to_i  
+      index2 = gets.chomp.to_i  
       route = Route.new(@stations[index1], @stations[index2])
       @routes << route
       puts route
@@ -200,7 +201,7 @@ class Railway
     display_trains
     train = @trains[gets.chomp.to_i]
     if train.route
-    train.move_to_next_station
+      train.move_to_next_station
     else
       puts "Чтобы переместить поезд по маршруту, сначала назначьте маршрут данному поезду"
     end  
@@ -211,9 +212,9 @@ class Railway
     display_trains
     train = @trains[gets.chomp.to_i]
     if train.route
-    train.move_to_previous_station
+      train.move_to_previous_station
     else
-    puts "Чтобы переместить поезд по маршруту, сначала назначьте маршрут данному поезду"
+      puts "Чтобы переместить поезд по маршруту, сначала назначьте маршрут данному поезду"
     end  
   end
 
@@ -225,7 +226,7 @@ class Railway
 
   def display_route
     @routes.each_with_index do |route, index|
-    puts "#{index} - маршрут:#{route.stations[0].name} - #{route.stations[-1].name}"
+      puts "#{index} - маршрут:#{route.stations[0].name} - #{route.stations[-1].name}"
     end
   end  
 
