@@ -1,4 +1,3 @@
-#require_relative 'station'
 require_relative 'company_module'
 require_relative 'instance_counter_module'
 
@@ -9,14 +8,12 @@ class Train
   attr_accessor :speed
   attr_reader  :route, :number, :type, :carriages
 
-  @@instances = 0
   @@trains = []
 
   def initialize(number, type)
     @number = number
     @type = type
     @carriages = []
-    @@instances += 1
     @@trains << self
     register_instance
   end

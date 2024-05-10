@@ -5,11 +5,10 @@ class Route
 
   attr_reader :stations
   
-  @@instances = 0
   
   def initialize(first_station, last_station)
     @stations = [first_station, last_station]
-    @@instances += 1
+    register_instance
   end
 
   def add_station(station)

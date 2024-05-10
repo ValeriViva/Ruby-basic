@@ -1,4 +1,3 @@
-#require_relative 'main'
 require_relative 'instance_counter_module'
 
 class Station
@@ -6,18 +5,16 @@ class Station
 
   attr_reader :trains, :name
   
-  @@instances = 0
   @@stations = []
 
   def initialize(name)
     @name = name
     @trains = []
-    @@instances += 1
     @@stations << self
+    register_instance
   end
 
   def self.all
-    #ObjectSpace.each_object(self)
     @@stations
   end  
 
