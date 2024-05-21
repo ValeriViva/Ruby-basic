@@ -72,8 +72,11 @@ class Railway
       CargoTrain.new(number, type)
     end     
     @trains << train
-    puts train.number
-    puts train.type  
+    puts "Поезд #{number} создан"
+  rescue StandardError => e
+    puts "Ошибка создания поезда: #{e.message}"
+    puts e.backtrace.inspect
+    retry
   end
 
   def create_station
@@ -81,7 +84,7 @@ class Railway
     name = gets.chomp
     station = Station.new(name)
     @stations << station
-    puts station.name
+    #puts station.name
   end
   
   def create_route
@@ -98,8 +101,8 @@ class Railway
       index2 = gets.chomp.to_i  
       route = Route.new(@stations[index1], @stations[index2])
       @routes << route
-      puts route
-      puts "маршрут: #{route.stations.first.name} - #{route.stations.last.name}"
+      #puts route
+      #puts "маршрут: #{route.stations.first.name} - #{route.stations.last.name}"
     else
       puts "Создайте станции"
     end    
@@ -170,7 +173,7 @@ class Railway
       display_trains
       train = @trains[gets.chomp.to_i]
       train.add_route(route)
-      puts "Поезд №#{train.number} находится на станции #{train.route.stations.first.name}"
+      #puts "Поезд №#{train.number} находится на станции #{train.route.stations.first.name}"
     else
       puts "Сначала создайте маршрут"
     end   
@@ -182,7 +185,7 @@ class Railway
     train = @trains[gets.chomp.to_i]
     train.stop
     train.add_carriage
-    puts train.carriages.size
+    #puts train.carriages.size
   end
   
   def delete_carriage
@@ -193,7 +196,7 @@ class Railway
     if train.carriages.size > 0
       train.delete_carriage
     end 
-    puts train.carriages.size 
+    #puts train.carriages.size 
   end
   
   def move_to_next_station
@@ -271,7 +274,7 @@ class Railway
     else
       puts "На данной станции нет поездов"  
     end  
-  end  
+  end
 end
 
 
