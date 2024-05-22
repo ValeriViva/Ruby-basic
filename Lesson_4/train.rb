@@ -7,17 +7,17 @@ class Train
 
   attr_accessor :speed, :number
   attr_reader  :route, :type, :carriages
-
+  
   NUMBER_FORMAT = /^([a-я]{3}|\d{3})-?([a-я]{2}|\d{2})$/i
-
+  
   @@trains = []
-
+  
   def initialize(number, type)
     @number = number
     @type = type
     @carriages = []
-    @@trains << self
     validate!
+    @@trains << self
     register_instance
   end
 
@@ -78,7 +78,6 @@ class Train
     raise "Number has invalid format" if number !~ NUMBER_FORMAT
     raise "Type can't be nil" if type.nil?
     raise "Type is invalid" unless type == :cargo || type == :passenger
-    true
   end
 
   def current_station
