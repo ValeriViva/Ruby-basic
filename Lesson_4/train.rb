@@ -1,5 +1,6 @@
 require_relative 'company_module'
 require_relative 'instance_counter_module'
+require_relative 'cargo_carriage'
 
 class Train
   include ManufacturingCompany
@@ -25,9 +26,10 @@ class Train
     @@trains.find { |train| train.number == number }
   end  
   
-  def add_carriage
+  def add_carriage(total_capacity)
+    @total_capacity = total_capacity
     if speed == 0
-      carriage = create_carriage
+      carriage = create_carriage(total_capacity)
       @carriages << carriage 
     end
   end
@@ -64,13 +66,18 @@ class Train
     @speed = 0
   end
 
+  def each_carriage(&block)
+    carriages.each_with_index(&block)
+  end
+
   def valid?
     validate!
+    true
   rescue StandardError
     false
   end
 
-  protected #следующие методы не используются извне данного класса, но могут использоваться в наследуемых классах
+  #protected #следующие методы не используются извне данного класса, но могут использоваться в наследуемых классах
 
   def validate!
     raise "Number can't be nil" if number.nil?
@@ -96,11 +103,11 @@ class Train
     @speed += 1
   end
   
-  def create_carriage
+  def create_carriage(total_capacity)
     if @type == :passenger
-      PassengerCarriage.new
+      PassengerCarriage.new(total_capacity)
     elsif @type == :cargo
-      CargoCarriage.new
+      CargoCarriage.new(total_capacity)
     end
   end
 end 

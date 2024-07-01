@@ -44,7 +44,7 @@ class Route
   def validate!
     raise "First station can't be nil" if @stations.first.nil?
     raise "Last station can't be nil" if @stations.last.nil?
-    raise "Name of first station should be at least 2 symbols" if @stations.first.length < 2
-    raise "Name of last station should be at least 2 symbols" if @stations[-1].length < 2
+    raise "Name of first station should be at least 2 symbols" if @stations.first.name.length < 2
+    raise "Name of last station should be at least 2 symbols" if @stations[-1].name.length < 2
   end
 end     

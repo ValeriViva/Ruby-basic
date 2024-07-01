@@ -117,6 +117,7 @@ class Railway
             Отцепить вагон от поезда - 5\n
             Переместить поезд по маршруту вперед - 6\n
             Переместить поезд по маршруту назад -7\n
+            Занять место в вагоне - 8\n
             Выйти в основное меню программы - 0"
       input = gets.chomp.to_i
       case input
@@ -134,6 +135,8 @@ class Railway
         move_to_next_station
       when 7
         move_to_previous_station
+      when 8
+        take_capacity  
       when 0
         break
       else
@@ -183,8 +186,10 @@ class Railway
     puts "Введите порядковый номер поезда"
     display_trains
     train = @trains[gets.chomp.to_i]
+    puts "Введите кол-во мест в вагоне для пассажирского поезда или общую вместимость для грузового"
+    total_capacity = gets.chomp.to_i
     train.stop
-    train.add_carriage
+    train.add_carriage(total_capacity)
     #puts train.carriages.size
   end
   
@@ -221,6 +226,27 @@ class Railway
     end  
   end
 
+  def take_capacity
+    puts "Выбрать поезд"
+    display_trains
+    train = @trains[gets.chomp.to_i]
+    puts "Выбрать номер вагона"
+    train.each_carriage do |carriage, index|
+      puts "Вагон № #{index += 1}, #{carriage.type}, свободно: #{carriage.available_capacity}"
+    end  
+    #puts "Выбрать номер вагона из списка выше"
+    carriage = train.carriages[gets.chomp.to_i - 1]
+    #puts "Если вагон грузовой, укажите какой объём нужно занять; пассажирские места занимаются по одному"
+    if carriage.type == :cargo
+      puts "Если вагон грузовой, укажите какой объём нужно занять"
+      carriage.occupy_capacity(gets.chomp.to_i)
+    else carriage.type == :passenger
+      puts "Пассажирские места занимаются по одному"
+      carriage.take_seats
+    end
+  end       
+
+
   def display_trains
     @trains.each_with_index do |train, index|
       puts "#{index} - поезд №#{train.number}"
@@ -237,6 +263,7 @@ class Railway
     loop do
       puts"Вывести список станций - введите 1\n
            Вывести список поездов на определённой станции - введите 2\n
+           Вывести список вагонов у определённого поезда - введите 3\n
            Выйти в основное меню программы - введите 0"
            input = gets.chomp.to_i
       case input
@@ -244,6 +271,8 @@ class Railway
         display_stations
       when 2
         display_trains_on_station
+      when 3
+        display_carriges  
       when 0
         break
       else
@@ -268,13 +297,27 @@ class Railway
       puts "#{index}-станция #{station.name}"
     end  
       choice = gets.chomp.to_i
-      station_trains = @stations[choice].trains
-    if station_trains.size >= 1
-      puts station_trains
+      station = @stations[choice]
+      #station_trains = @stations[choice].trains
+    #if station_trains.size >= 1
+      #puts station_trains
+    if station.trains.size >= 1
+      station.each_train do |train|
+        puts "Train: number #{train.number}, #{train.type}, #{train.carriages.size}"
+      end   
     else
       puts "На данной станции нет поездов"  
     end  
   end
+
+  def display_carriges
+    puts "Выберите поезд"
+    display_trains
+    train = @trains[gets.chomp.to_i]
+    train.each_carriage do |carriage, index|
+      puts "Вагон № #{index += 1}, #{carriage.type}, занято: #{carriage.occupied_capacity}, свободно: #{carriage.available_capacity}"
+    end  
+  end  
 end
 
 
