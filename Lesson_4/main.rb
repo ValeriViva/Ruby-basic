@@ -234,9 +234,7 @@ class Railway
     train.each_carriage do |carriage, index|
       puts "Вагон № #{index += 1}, #{carriage.type}, свободно: #{carriage.available_capacity}"
     end  
-    #puts "Выбрать номер вагона из списка выше"
     carriage = train.carriages[gets.chomp.to_i - 1]
-    #puts "Если вагон грузовой, укажите какой объём нужно занять; пассажирские места занимаются по одному"
     if carriage.type == :cargo
       puts "Если вагон грузовой, укажите какой объём нужно занять"
       carriage.occupy_capacity(gets.chomp.to_i)
@@ -298,9 +296,6 @@ class Railway
     end  
       choice = gets.chomp.to_i
       station = @stations[choice]
-      #station_trains = @stations[choice].trains
-    #if station_trains.size >= 1
-      #puts station_trains
     if station.trains.size >= 1
       station.each_train do |train|
         puts "Train: number #{train.number}, #{train.type}, #{train.carriages.size}"
