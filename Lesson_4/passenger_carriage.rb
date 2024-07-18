@@ -8,7 +8,11 @@ class PassengerCarriage < Carriage
   end
 
   def take_seats
-    @occupied_capacity += 1
+    if available_capacity >= 1
+      @occupied_capacity += 1
+    else 
+      puts "Свободных мест нет"
+    end    
   end  
 end
   

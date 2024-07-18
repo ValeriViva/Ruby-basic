@@ -235,13 +235,17 @@ class Railway
       puts "Вагон № #{index += 1}, #{carriage.type}, свободно: #{carriage.available_capacity}"
     end  
     carriage = train.carriages[gets.chomp.to_i - 1]
-    if carriage.type == :cargo
-      puts "Если вагон грузовой, укажите какой объём нужно занять"
-      carriage.occupy_capacity(gets.chomp.to_i)
-    else carriage.type == :passenger
-      puts "Пассажирские места занимаются по одному"
-      carriage.take_seats
-    end
+    if carriage.available_capacity > 0
+      if carriage.type == :cargo 
+        puts "Если вагон грузовой, укажите какой объём нужно занять"
+        carriage.occupy_capacity(gets.chomp.to_i)
+      else carriage.type == :passenger
+        puts "Пассажирские места занимаются по одному"
+        carriage.take_seats
+      end
+    else
+      puts "В данном вагоне нет свободного места"
+    end    
   end       
 
 
@@ -325,5 +329,4 @@ railway.create
 railway.action
 
 railway.display
-
 
