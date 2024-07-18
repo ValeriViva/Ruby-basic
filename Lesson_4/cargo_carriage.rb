@@ -8,15 +8,10 @@ class CargoCarriage < Carriage
   end
 
   def occupy_capacity(capacity)
-    #if @occupied_capacity + capacity <= @total_capacity
-      #@occupied_capacity += capacity
-    #else
-      #puts "Недостаточно свободного места"
-    #end
     if capacity <= available_capacity
       @occupied_capacity += capacity
     else
-      puts "Доступно всего #{available_capacity} кубометров"
+      puts "Недостаточно свободного места, доступно всего #{available_capacity} кубометров"
     end        
   end  
 end
