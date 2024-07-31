@@ -9,55 +9,37 @@ require_relative 'passenger_carriage'
 
 
 class Railway
+
   def initialize
     @trains = []
     @stations = []
     @routes = []
   end
 
-  def menu 
+  def menu
+    menu = {a: method(:create), b: method(:action), c: method(:display), ext: method(:exit)}
     loop do
-      puts "Создать поезд, маршрут или станцию- введите 1\n
-            Произвести действия с объектом - введите 2\n
-            Вывести информацию на экран - введите 3\n
-            Выйти из программы - введите 0"
-            choice = gets.chomp.to_i
-      case choice
-      when 1
-        create
-      when 2
-        action
-      when 3
-        display
-      when 0
-        exit
-      else
-        puts "Введено ошибочное число"
-      end
+      puts "Создать поезд, маршрут или станцию - a\n
+            Произвести действия с объектом - b\n
+            Вывести информацию на экран - c\n
+            Выйти из программы - ext"
+      choice = gets.chomp.to_sym
+      menu.key?(choice) ? menu[choice].call : incorrect_input
     end
   end
 
   protected #чтобы нельзя было получить доступ к следующим методам извне данного класса 
 
   def create
+    create = {a: method(:create_train), b: method(:create_station), c: method(:create_route)} #d: method(:break)}
     loop do
-      puts "Создать поезд - введите 1\n
-            Создать станцию - введите 2\n
-            Создать маршрут - введите 3\n
-            Выйти в основное меню программы - введите 0"
-            choice = gets.chomp.to_i
-      case choice
-      when 1
-        create_train
-      when 2
-        create_station
-      when 3
-        create_route
-      when 0
-        break
-      else
-        puts "Введено ошибочное число"
-      end
+      puts "Создать поезд - a\n
+            Создать станцию - b\n
+            Создать маршрут - c\n
+            Выйти в основное меню программы - ext"
+      choice = gets.chomp.to_sym
+      break if choice == :ext
+      create.key?(choice) ? create[choice].call : incorrect_input
     end
   end
 
@@ -109,39 +91,21 @@ class Railway
   end
 
   def action
+    action = {a: method(:add_station), b: method(:delete_station), c: method(:add_route), d: method(:add_carriage), 
+         e: method(:delete_carriage), f: method(:move_to_next_station), g: method(:move_to_previous_station), h: method(:take_capacity)}
     loop do
-      puts "Добавить станцию к маршруту - 1\n
-            Убрать станцию из маршрута - 2\n
-            Назначить маршрут поезду - 3\n
-            Прицепить вагон к поезду -4\n
-            Отцепить вагон от поезда - 5\n
-            Переместить поезд по маршруту вперед - 6\n
-            Переместить поезд по маршруту назад -7\n
-            Занять место в вагоне - 8\n
-            Выйти в основное меню программы - 0"
-      input = gets.chomp.to_i
-      case input
-      when 1
-        add_station
-      when 2
-        delete_station
-      when 3
-        add_route
-      when 4
-        add_carriage
-      when 5
-        delete_carriage
-      when 6
-        move_to_next_station
-      when 7
-        move_to_previous_station
-      when 8
-        take_capacity  
-      when 0
-        break
-      else
-        puts "Такого выбора не существует"
-      end
+      puts "Добавить станцию к маршруту - a\n
+            Убрать станцию из маршрута - b\n
+            Назначить маршрут поезду - c\n
+            Прицепить вагон к поезду -d\n
+            Отцепить вагон от поезда - e\n
+            Переместить поезд по маршруту вперед - f\n
+            Переместить поезд по маршруту назад -g\n
+            Занять место в вагоне - h\n
+            Выйти в основное меню программы - ext"
+      input = gets.chomp.to_sym
+      break if input == :ext
+      action.key?(input) ? action[input].call : incorrect_input
     end        
   end     
 
@@ -262,24 +226,15 @@ class Railway
   end  
 
   def display
-    loop do
-      puts"Вывести список станций - введите 1\n
-           Вывести список поездов на определённой станции - введите 2\n
-           Вывести список вагонов у определённого поезда - введите 3\n
-           Выйти в основное меню программы - введите 0"
-           input = gets.chomp.to_i
-      case input
-      when 1
-        display_stations
-      when 2
-        display_trains_on_station
-      when 3
-        display_carriges  
-      when 0
-        break
-      else
-        puts "Такого выбора не существует"
-      end
+    display = {a: method(:display_stations), b: method(:display_trains_on_station),c: method(:display_carriges)}
+    loop do 
+      puts"Вывести список станций - a\n
+           Вывести список поездов на определённой станции - b\n
+           Вывести список вагонов у определённого поезда - c\n
+           Выйти в основное меню программы - ext"
+      input = gets.chomp.to_sym
+      break if input == :ext
+      display.key?(input) ? display[input].call : incorrect_input
     end        
   end
 
@@ -316,6 +271,10 @@ class Railway
     train.each_carriage do |carriage, index|
       puts "Вагон № #{index += 1}, #{carriage.type}, занято: #{carriage.occupied_capacity}, свободно: #{carriage.available_capacity}"
     end  
+  end
+  
+  def incorrect_input
+    puts "Введено неверное значение"
   end  
 end
 
