@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'carriage'
 
 class PassengerCarriage < Carriage
@@ -10,9 +12,8 @@ class PassengerCarriage < Carriage
   def take_seats
     if available_capacity >= 1
       @occupied_capacity += 1
-    else 
-      puts "Свободных мест нет"
-    end    
-  end  
+    else
+      puts 'Свободных мест нет'
+    end
+  end
 end
-  

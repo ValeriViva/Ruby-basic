@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'carriage'
 
 class CargoCarriage < Carriage
@@ -12,8 +14,6 @@ class CargoCarriage < Carriage
       @occupied_capacity += capacity
     else
       puts "Недостаточно свободного места, доступно всего #{available_capacity} кубометров"
-    end        
-  end  
+    end
+  end
 end
-
-  

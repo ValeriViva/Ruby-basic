@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'instance_counter_module'
 
 class Station
@@ -5,7 +7,7 @@ class Station
 
   attr_accessor :name
   attr_reader :trains
-  
+
   @@stations = []
 
   def initialize(name)
@@ -18,16 +20,16 @@ class Station
 
   def self.all
     @@stations
-  end  
+  end
 
   def take_train(train)
     @trains << train
   end
-  
+
   def get_train_by_type(type)
-    @trains.select{|train| train.type == type}.size 
-  end 
-      
+    @trains.select { |train| train.type == type }.size
+  end
+
   def send_train(train)
     @trains.delete(train)
   end
@@ -41,11 +43,11 @@ class Station
   rescue StandardError
     false
   end
-  
+
   protected
 
   def validate!
     raise "Name can't be nil" if name.nil?
-    raise "Name should be at least 2 symbols" if name.length < 2
-  end  
+    raise 'Name should be at least 2 symbols' if name.length < 2
+  end
 end
