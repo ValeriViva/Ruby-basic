@@ -3,13 +3,17 @@
 require_relative 'company_module'
 require_relative 'instance_counter_module'
 require_relative 'cargo_carriage'
+require_relative 'my_attr_accessor'
 
 class Train
   include ManufacturingCompany
   include InstanceCounter
+  extend MyAttrAccesor
 
   attr_accessor :speed, :number
   attr_reader :route, :type, :carriages
+  attr_accessor_with_history :name
+
 
   NUMBER_FORMAT = /^([a-я]{3}|\d{3})-?([a-я]{2}|\d{2})$/i.freeze
 
