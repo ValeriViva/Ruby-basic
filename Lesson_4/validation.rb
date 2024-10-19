@@ -25,7 +25,9 @@ module Validation
     end
 
     def validate_presence(name)
+      puts name
       value = instance_variable_get("@#{name}".to_sym)
+      puts value
       raise 'Атрибут не может быть пустым!' if value == '' || value.nil?
     end
 

@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 require_relative 'instance_counter_module'
+require_relative 'validation'
 
 class Station
   include InstanceCounter
+  include Validation
 
   attr_accessor :name
   attr_reader :trains
+
+  validate :name, :presence
+  validate :trains, :presence
 
   @@stations = []
 
@@ -38,16 +43,16 @@ class Station
     @trains.each(&block)
   end
 
-  def valid?
-    validate!
-  rescue StandardError
-    false
-  end
+  # def valid?
+  #   validate!
+  # rescue StandardError
+  #   false
+  # end
 
-  protected
+  # protected
 
-  def validate!
-    raise "Name can't be nil" if name.nil?
-    raise 'Name should be at least 2 symbols' if name.length < 2
-  end
+  # def validate!
+  #   raise "Name can't be nil" if name.nil?
+  #   raise 'Name should be at least 2 symbols' if name.length < 2
+  # end
 end
