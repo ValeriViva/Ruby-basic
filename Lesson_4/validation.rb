@@ -15,7 +15,14 @@ module Validation
 
   module InstanceMethods
     def validate!
-      self.class.validations.each do |validation|
+      #require 'pry'; binding.pry
+      if self.class.superclass == Object
+        src = self.class
+      else
+        src = self.class.superclass
+      end    
+
+      src.validations.each do |validation|
           name = validation[:name]
           type = validation[:type]
           args = validation[:args]
@@ -25,9 +32,10 @@ module Validation
     end
 
     def validate_presence(name)
-      puts name
+      #require 'pry'; binding.pry
+      #puts name
       value = instance_variable_get("@#{name}".to_sym)
-      puts value
+      #puts value
       raise 'Атрибут не может быть пустым!' if value == '' || value.nil?
     end
 

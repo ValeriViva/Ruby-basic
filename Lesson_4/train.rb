@@ -125,14 +125,14 @@ class Train
   end
 end
 
-train = Train.new("222-55", :cargo)
-train.name = :art
-train.name = :music
-train.name = :cinima
+# train = Train.new("223-55", :cargo)
+# train.name = :art
+# train.name = :music
+# train.name = :cinima
 
-train.a = 1
-train.a = 22
-train.a = 333
+# train.a = 1
+# train.a = 22
+# train.a = 333
 
-puts train.name_history
-puts train.a_history
+# puts train.name_history
+# puts train.a_history

@@ -49,13 +49,16 @@ class Railway
     number = gets.chomp.to_s
     puts 'Введите тип поезда: passenger или cargo'
     type = gets.chomp
+    #require 'pry'; binding.pry
     train = if type == 'passenger'
               PassengerTrain.new(number, type)
             elsif type == 'cargo'
               CargoTrain.new(number, type)
+            else
+              puts "Введены некорректные данные, поезд не создан"   
             end
     @trains << train
-    puts "Поезд #{number} создан"
+    puts train
   rescue StandardError => e
     puts "Ошибка создания поезда: #{e.message}"
     puts e.backtrace.inspect
@@ -68,6 +71,10 @@ class Railway
     station = Station.new(name)
     @stations << station
     # puts station.name
+  rescue StandardError => e
+    puts "Ошибка создания станции: #{e.message}"
+    puts e.backtrace.inspect
+    retry
   end
 
   def create_route
@@ -84,10 +91,11 @@ class Railway
       index2 = gets.chomp.to_i
       route = Route.new(@stations[index1], @stations[index2])
       @routes << route
-      # puts route
+      puts route.stations
+      puts route
       # puts "маршрут: #{route.stations.first.name} - #{route.stations.last.name}"
     else
-      puts 'Создайте станции'
+      puts 'Сначала создайте станции'
     end
   end
 
