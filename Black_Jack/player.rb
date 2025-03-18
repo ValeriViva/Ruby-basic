@@ -14,6 +14,19 @@ class Player
   
   def take_card(deck)
     @cards << deck.deal_card
-  end  
+  end
+  
+  def show_cards
+    puts "#{@name}, Ваши карты:"
+    @cards.each { |card| puts "#{value}#{suit}"}
+  end
 
-end
+  def get_points
+    cards.each do |card|
+      if card.value == 'Т'
+        @points += @points + 11 <= 21 ? 11 : 1
+      else 
+        @points += card.point
+      end
+    end
+  end  

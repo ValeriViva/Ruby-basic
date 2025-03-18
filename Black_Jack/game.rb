@@ -7,14 +7,15 @@ class Game
     #@dealer = Dealer.new
     #@deck = Deck.new
     @decks = []
+    @bank = 0
   end
   
   def create_game
     puts "Приветствуем Вас в игре Black Jack"
     puts "Как Вас зовут?"
-    name = gets.chomp
-    @user = User.new(name)
-    @dealer = Dealer.new("dealer")
+    name = gets.chomp.capitalize
+    @user = User.new(name)   #заменить на Player.new
+    @dealer = Dealer.new("dealer") #заменить на Player.new
     start_game
   end  
 
@@ -22,6 +23,9 @@ class Game
     create_deck
     place_bet
     deal_cards(2)
+    @user.show_cards
+    puts "Карты дилера: * *"
+    scoring
     #play_round
     #define_winner
   end
@@ -34,7 +38,7 @@ class Game
   def deal_cards(count)
     count.times do
       @user.take_card(@deck)
-      @dealer.take_card(@deck)
+      @dealer.take_card(@deck) 
     end 
   end  
 
@@ -43,6 +47,58 @@ class Game
     @diller.put_bank(BET)
     @bank = BET + BET
   end
+  
+  def scoring
+    @user.get_points
+    puts "#{@user.name}, у Вас #{@user.points} очков"
+    user_move
+  end  
+
+  def user_move
+    puts "Ваш ход - выберите действие:"
+    action = { a: method(:scip(@user)), b: method(:add_card(@user)), c: method(:open_cards) }
+    loop do
+      puts "Пропустить ход - a\n
+            Добавить карту - b\n
+            Открыть карты - c"
+      choice = gets.chomp.to_sym
+      action.key?(choice) ? action[choice].call : incorrect_input
+    end
+  end
+  
+  def scip(player)
+    if player == @user 
+      dealer_move
+    else
+      user_move
+    end
+  end  
+
+  def dealer_move
+    if @diller.points >= 17 || @diller.cards.size > 2 
+      scip(@diller)
+    else
+      add_card(@diller)
+      user_move
+    end
+  end
+
+  def add_card(player)
+    if player == @user && @user.cards.size < 3
+      @user.take_card(@deck)
+      @user.show_cards
+    else  
+      @dealer.take_card(@deck)
+      puts "Карты дилера: * * *"
+    end  
+  end    
+
+  def open_cards
+    @user.show_cards 
+    @dealer.show_cards
+  end  
+
+
   
   def play_round
     @user.make_move_1
@@ -57,7 +113,11 @@ class Game
     else
       user
     end
-  end      
+  end
+  
+  def incorrect_input
+    puts 'Введено неверное значение'
+  end
 end
  
 
