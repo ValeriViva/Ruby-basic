@@ -44,8 +44,8 @@ class Game
   end  
 
   def place_bet
-    @user.put_bank(BET)
-    @diller.put_bank(BET)
+    @user.place_bet(BET)
+    @dealer.place_bet(BET)
     @bank = BET + BET
   end
   
@@ -58,17 +58,17 @@ class Game
   end  
 
   def user_move
-    if @user.cards.size == 3 && @diller.cards.size == 3
+    if @user.cards.size == 3 && @dealer.cards.size == 3
       open_cards
     else  
       puts "Ваш ход - выберите действие:"
-      action = { a: method(:scip(@user)), b: method(:add_card(@user)), c: method(:open_cards) }
+      user_move = { a: method(:scip), b: method(:add_card), c: method(:open_cards) }
       loop do
         puts "Пропустить ход - a\n
               Добавить карту - b\n
               Открыть карты - c"
         choice = gets.chomp.to_sym
-        action.key?(choice) ? action[choice].call : incorrect_input
+        user_move.key?(choice) ? user_move[choice].call(@user) : incorrect_input
       end
     end  
   end
@@ -82,10 +82,10 @@ class Game
   end  
 
   def dealer_move
-    if @diller.points >= 17 || @diller.cards.size > 2 
-      scip(@diller)
+    if @dealer.points >= 17 || @dealer.cards.size > 2 
+      scip(@dealer)
     else
-      add_card(@diller)
+      add_card(@dealer)
       user_move
     end
   end
@@ -100,7 +100,7 @@ class Game
     end  
   end    
 
-  def open_cards
+  def open_cards(f)
     @user.show_cards 
     @dealer.show_cards
     scoring_2
@@ -116,12 +116,12 @@ class Game
   
   def define_winner
     @winner = nil
-    if @user.points <= 21 && @diller.points <= 21
-      unless @user.points == @diller.points
-        @winner = @user.points > @diller.points ? @user : @diller
+    if @user.points <= 21 && @dealer.points <= 21
+      unless @user.points == @dealer.points
+        @winner = @user.points > @dealer.points ? @user : @dealer
       end
     else 
-      @winner = @user.points <= 21 ? @user : @diller
+      @winner = @user.points <= 21 ? @user : @dealer
     end
     cash_prize
   end
@@ -131,7 +131,7 @@ class Game
       @winner.bank += @bank
     else
       @user.bank += @bank/2
-      @diller.bank += @bank/2
+      @dealer.bank += @bank/2
     end
     show_winner
   end   
@@ -147,6 +147,8 @@ class Game
   
   def new_game
     @bank = 0
+    @user.cards = []
+    @dealer.cards = []
     if @user.bank > 0
       puts "#{@user.name}, хотите сыграть ещё?\n
             Да - введите 1\n

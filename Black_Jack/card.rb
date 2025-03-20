@@ -1,5 +1,5 @@
 class Card
-  attr_reader :view, :value, :point
+  attr_reader :suit, :value, :point
 
   def initialize (suit, value, point)
     @value = value

@@ -18,11 +18,14 @@ class Player
   
   def show_cards
     puts "#{@name}, Ваши карты:"
-    @cards.each { |card| puts "#{value}#{suit}"}
+    @cards.each do |card|
+      puts "#{card.value} #{card.suit}"
+    end  
   end
 
   def get_points
-    cards.each do |card|
+    @points = 0
+    @cards.each do |card|
       if card.value == 'Т'
         @points += @points + 11 <= 21 ? 11 : 1
       else 
