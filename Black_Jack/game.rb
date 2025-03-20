@@ -14,8 +14,8 @@ class Game
     puts "Приветствуем Вас в игре Black Jack"
     puts "Как Вас зовут?"
     name = gets.chomp.capitalize
-    @user = User.new(name)   #заменить на Player.new
-    @dealer = Dealer.new("dealer") #заменить на Player.new
+    @user = Player.new(name)
+    @dealer = Player.new("dealer")
     start_game
   end  
 
@@ -25,7 +25,8 @@ class Game
     deal_cards(2)
     @user.show_cards
     puts "Карты дилера: * *"
-    scoring
+    scoring_1
+    # @user.show_points
     #play_round
     #define_winner
   end
@@ -48,22 +49,28 @@ class Game
     @bank = BET + BET
   end
   
-  def scoring
+  def scoring_1
+    @dealer.get_points
     @user.get_points
-    puts "#{@user.name}, у Вас #{@user.points} очков"
+    @user.show_points
+    #puts "#{@user.name}, у Вас #{@user.points} очков"
     user_move
   end  
 
   def user_move
-    puts "Ваш ход - выберите действие:"
-    action = { a: method(:scip(@user)), b: method(:add_card(@user)), c: method(:open_cards) }
-    loop do
-      puts "Пропустить ход - a\n
-            Добавить карту - b\n
-            Открыть карты - c"
-      choice = gets.chomp.to_sym
-      action.key?(choice) ? action[choice].call : incorrect_input
-    end
+    if @user.cards.size == 3 && @diller.cards.size == 3
+      open_cards
+    else  
+      puts "Ваш ход - выберите действие:"
+      action = { a: method(:scip(@user)), b: method(:add_card(@user)), c: method(:open_cards) }
+      loop do
+        puts "Пропустить ход - a\n
+              Добавить карту - b\n
+              Открыть карты - c"
+        choice = gets.chomp.to_sym
+        action.key?(choice) ? action[choice].call : incorrect_input
+      end
+    end  
   end
   
   def scip(player)
@@ -96,28 +103,71 @@ class Game
   def open_cards
     @user.show_cards 
     @dealer.show_cards
-  end  
+    scoring_2
+  end
 
-
-  
-  def play_round
-    @user.make_move_1
-    @dealer.make_move_1
-    @user.make_move_2
-    @dealer.make_move_2
+  def scoring_2
+    @user.get_points
+    @user.show_points
+    @dealer.get_points
+    @dealer.show_points
+    define_winner
   end
   
   def define_winner
-    if user.points < dealer.points
-      dealer
-    else
-      user
+    @winner = nil
+    if @user.points <= 21 && @diller.points <= 21
+      unless @user.points == @diller.points
+        @winner = @user.points > @diller.points ? @user : @diller
+      end
+    else 
+      @winner = @user.points <= 21 ? @user : @diller
     end
+    cash_prize
   end
   
+  def cash_prize
+    if @winner
+      @winner.bank += @bank
+    else
+      @user.bank += @bank/2
+      @diller.bank += @bank/2
+    end
+    show_winner
+  end   
+
+  def show_winner
+    if @winner
+      puts "Победил #{@winner.name}, выйгрыш составил #{@bank}$"
+    else 
+      puts "Ничья, ставки возвращаются в банк играков"
+    end
+    new_game
+  end
+  
+  def new_game
+    @bank = 0
+    if @user.bank > 0
+      puts "#{@user.name}, хотите сыграть ещё?\n
+            Да - введите 1\n
+            Нет - любая клавиша"
+      choise = gets.to_i
+      if choise == 1
+        start_game
+      else
+        exit
+      end
+    else
+      puts "#{@user.name}, Вы банкрот. Попробуйте устроится на работу!"
+      sleep 10 
+      exit
+    end
+  end            
+
   def incorrect_input
     puts 'Введено неверное значение'
   end
+
 end
  
 

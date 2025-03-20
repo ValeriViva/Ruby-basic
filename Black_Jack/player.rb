@@ -29,4 +29,10 @@ class Player
         @points += card.point
       end
     end
+  end
+  
+  def show_points
+    puts "#{@name}, у Вас #{@points} очков"
   end  
+
+end  
