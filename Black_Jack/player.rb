@@ -2,7 +2,7 @@ class Player
   attr_accessor :cards, :bank, :name, :points
 
   def initialize(name)
-    @bank = 100;
+    @bank = 100
     @cards = []
     @points = 0
     @name = name
@@ -19,7 +19,7 @@ class Player
   def show_cards
     puts "#{@name}, Ваши карты:"
     @cards.each do |card|
-      puts "#{card.value} #{card.suit}"
+      puts "#{card.value}#{card.suit}"
     end  
   end
 

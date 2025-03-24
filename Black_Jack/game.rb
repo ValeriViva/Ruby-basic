@@ -52,22 +52,23 @@ class Game
   def scoring_1
     @dealer.get_points
     @user.get_points
+    sleep 5
     @user.show_points
     #puts "#{@user.name}, у Вас #{@user.points} очков"
     user_move
   end  
 
   def user_move
+    sleep 4
     if @user.cards.size == 3 && @dealer.cards.size == 3
-      open_cards
+      open_cards(@user)
     else  
       puts "Ваш ход - выберите действие:"
       user_move = { a: method(:scip), b: method(:add_card), c: method(:open_cards) }
       loop do
-        puts "Пропустить ход - a\n
-              Добавить карту - b\n
-              Открыть карты - c"
+        puts "Пропустить ход - a, Добавить карту - b, Открыть карты - c"
         choice = gets.chomp.to_sym
+        
         user_move.key?(choice) ? user_move[choice].call(@user) : incorrect_input
       end
     end  
@@ -82,10 +83,13 @@ class Game
   end  
 
   def dealer_move
+    sleep 3
     if @dealer.points >= 17 || @dealer.cards.size > 2 
+      puts "Дилер пропускает ход"
       scip(@dealer)
     else
       add_card(@dealer)
+      puts "Карты дилера: * * *"
       user_move
     end
   end
@@ -94,13 +98,21 @@ class Game
     if player == @user && @user.cards.size < 3
       @user.take_card(@deck)
       @user.show_cards
+      @user.get_points
+      @user.show_points
+      sleep 4
+      puts "Ход дилера"
+      dealer_move
+    elsif player == @user && @user.cards.size == 3
+      puts "#{@user.name}, у Вас уже есть 3 карты, больше добавлять нельзя" 
     else  
-      @dealer.take_card(@deck)
-      puts "Карты дилера: * * *"
+      @dealer.take_card(@deck) if @dealer.cards.size < 3
     end  
   end    
 
-  def open_cards(f)
+  def open_cards(player)
+    puts "Открываем карты:"
+    sleep 4
     @user.show_cards 
     @dealer.show_cards
     scoring_2
@@ -146,11 +158,12 @@ class Game
   end
   
   def new_game
+    sleep 5
     @bank = 0
     @user.cards = []
     @dealer.cards = []
     if @user.bank > 0
-      puts "#{@user.name}, хотите сыграть ещё?\n
+      puts "#{@user.name}, на вашем счете #{@user.bank}$, хотите сыграть ещё?\n
             Да - введите 1\n
             Нет - любая клавиша"
       choise = gets.to_i
