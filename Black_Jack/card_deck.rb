@@ -22,7 +22,7 @@ class CardDeck
 
   def generate_deck
     SUITS.each do |suit|
-      VAlUES.each do |value|
+      VALUES.each do |value|
         card = Card.new(suit, value, POINTS[value])
         @cards << card
       end
